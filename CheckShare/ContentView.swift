@@ -9,12 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var billAmountDisplay = ""
-    @State private var totalPersons = 0 {
-        didSet {
-            print("Total persons updated")
-        }
-    }
+    @State private var totalPersonsDisplay = ""
     @State private var selectedTipPercentage = 2
+
+    private var totalPersons: Double {
+        return (Double(totalPersonsDisplay) ?? 1)
+    }
 
     let tipPercentages = [0, 10, 15, 20, 25]
 
@@ -32,8 +32,8 @@ struct ContentView: View {
     }
 
     var totalPerPerson: Double {
-        guard (totalPersons + 2) > 0 else { return totalBillAmount }
-        return totalBillAmount / Double(totalPersons + 2)
+        guard totalPersons > 0 else { return totalBillAmount }
+        return totalBillAmount / totalPersons
     }
 
     var body: some View {
@@ -43,11 +43,13 @@ struct ContentView: View {
                     TextField("Enter Check Amount", text: $billAmountDisplay)
                         .keyboardType(.decimalPad)
 
-                    Picker("Number of people", selection: $totalPersons) {
-                        ForEach(2 ..< 21) {
-                            Text("\($0) people")
-                        }
-                    }
+//                    Picker("Number of people", selection: $totalPersons) {
+//                        ForEach(2 ..< 21) {
+//                            Text("\($0) people")
+//                        }
+//                    }
+                    TextField("Number of people", text: $totalPersonsDisplay)
+                        .keyboardType(.numberPad)
                 }
 
                 Section(header: Text("Tip Percentage")) {
